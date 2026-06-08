@@ -1,0 +1,74 @@
+{% extends 'layouts/app.html' %}
+{% block title %}Group Sessions — ADVICE{% endblock %}
+{% block page_title %}Group Sessions{% endblock %}
+{% block page_subtitle %}Join a moderated group therapy or peer support session{% endblock %}
+
+{% block app_content %}
+<div class="space-y-5">
+  {% if user.is_counselor %}
+  <div class="flex justify-end">
+    <a href="{% url 'create_group_session' %}" class="btn-primary">+ Create Group Session</a>
+  </div>
+  {% endif %}
+
+  {% if sessions %}
+  <div class="grid md:grid-cols-2 gap-5">
+    {% for gs in sessions %}
+    <div class="card hover:shadow-md transition">
+      <div class="flex items-start justify-between mb-3">
+        <h3 class="font-bold text-gray-900 text-lg">{{ gs.title }}</h3>
+        {% if gs.is_anonymous %}
+        <span class="badge bg-gray-100 text-gray-500">Anonymous</span>
+        {% endif %}
+      </div>
+      <p class="text-sm text-gray-500 mb-4">{{ gs.description|truncatechars:120 }}</p>
+
+      <div class="grid grid-cols-2 gap-3 mb-4 text-sm">
+        <div class="bg-blue-50 rounded-xl p-3">
+          <p class="text-xs text-gray-400">Date & Time</p>
+          <p class="font-semibold text-gray-800">{{ gs.scheduled_at|date:"d M, H:i" }}</p>
+        </div>
+        <div class="bg-green-50 rounded-xl p-3">
+          <p class="text-xs text-gray-400">Spots Left</p>
+          <p class="font-semibold {% if gs.spots_remaining <= 2 %}text-red-600{% else %}text-green-700{% endif %}">
+            {{ gs.spots_remaining }} / {{ gs.max_participants }}
+          </p>
+        </div>
+        <div class="bg-gray-50 rounded-xl p-3">
+          <p class="text-xs text-gray-400">Facilitator</p>
+          <p class="font-semibold text-gray-800">{{ gs.facilitator.full_name }}</p>
+        </div>
+        <div class="bg-purple-50 rounded-xl p-3">
+          <p class="text-xs text-gray-400">Duration</p>
+          <p class="font-semibold text-gray-800">{{ gs.duration_minutes }} min</p>
+        </div>
+      </div>
+
+      {% if gs.topic %}
+      <p class="text-xs text-gray-400 mb-3">Topic: <span class="text-gray-600">{{ gs.topic }}</span></p>
+      {% endif %}
+
+      {% if gs.id in my_registrations %}
+      <div class="bg-green-50 border border-green-200 rounded-xl p-3 text-center">
+        <p class="text-green-700 font-semibold text-sm">✅ You're registered!</p>
+        {% if gs.meeting_link %}<a href="{{ gs.meeting_link }}" target="_blank" class="text-green-600 text-xs hover:underline">Join meeting →</a>{% endif %}
+      </div>
+      {% elif gs.is_full %}
+      <div class="bg-gray-100 rounded-xl p-3 text-center">
+        <p class="text-gray-500 font-medium text-sm">Session Full</p>
+      </div>
+      {% elif user.is_student %}
+      <a href="{% url 'join_group_session' gs.id %}" class="block text-center bg-blue-600 text-white py-2.5 rounded-xl font-semibold hover:bg-blue-700 transition text-sm">Join Session</a>
+      {% endif %}
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="card text-center py-14">
+    <p class="text-5xl mb-4">👥</p>
+    <p class="text-gray-500 text-lg mb-1">No upcoming group sessions</p>
+    <p class="text-gray-400 text-sm">Check back later or ask your counselor to schedule one.</p>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

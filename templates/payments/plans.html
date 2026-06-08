@@ -1,0 +1,60 @@
+{% extends 'layouts/public.html' %}
+{% block title %}Pricing — ADVICE{% endblock %}
+
+{% block pub_content %}
+<section class="py-16 px-6 max-w-6xl mx-auto">
+  <div class="text-center mb-14">
+    <h1 class="text-4xl font-extrabold text-gray-900 mb-4">Simple, Transparent Pricing</h1>
+    <p class="text-gray-500 text-lg max-w-xl mx-auto">Choose the plan that fits your institution's size and needs. All plans include a 30-day free trial.</p>
+  </div>
+
+  <div class="grid md:grid-cols-3 gap-8">
+    {% for plan in plans %}
+    <div class="bg-white rounded-3xl border-2 {% if plan.slug == 'professional' %}border-blue-500 shadow-xl{% else %}border-gray-100 shadow-sm{% endif %} p-8 relative">
+      {% if plan.slug == 'professional' %}
+      <div class="absolute -top-4 left-1/2 -translate-x-1/2">
+        <span class="bg-blue-600 text-white text-xs font-bold px-4 py-1.5 rounded-full">Most Popular</span>
+      </div>
+      {% endif %}
+      <h2 class="text-2xl font-bold text-gray-900 mb-2">{{ plan.name }}</h2>
+      <div class="mb-4">
+        {% if plan.price_usd %}
+        <span class="text-4xl font-extrabold text-gray-900">${{ plan.price_usd|floatformat:0 }}</span>
+        <span class="text-gray-400 text-sm">/year</span>
+        {% else %}
+        <span class="text-4xl font-extrabold text-gray-900">Custom</span>
+        {% endif %}
+      </div>
+      <p class="text-gray-500 text-sm mb-6">{{ plan.description }}</p>
+
+      <ul class="space-y-3 mb-8 text-sm">
+        <li class="flex items-center gap-2 text-gray-700">
+          <span class="text-green-500">✓</span>
+          {% if plan.max_students %}Up to {{ plan.max_students }} students{% else %}Unlimited students{% endif %}
+        </li>
+        <li class="flex items-center gap-2 text-gray-700">
+          <span class="text-green-500">✓</span>
+          {% if plan.max_counselors %}Up to {{ plan.max_counselors }} counselors{% else %}Unlimited counselors{% endif %}
+        </li>
+        {% if plan.has_real_time_chat %}<li class="flex items-center gap-2 text-gray-700"><span class="text-green-500">✓</span> Real-time chat</li>{% endif %}
+        {% if plan.has_group_sessions %}<li class="flex items-center gap-2 text-gray-700"><span class="text-green-500">✓</span> Group sessions</li>{% endif %}
+        {% if plan.has_analytics %}<li class="flex items-center gap-2 text-gray-700"><span class="text-green-500">✓</span> Analytics dashboard</li>{% endif %}
+        {% if plan.has_custom_branding %}<li class="flex items-center gap-2 text-gray-700"><span class="text-green-500">✓</span> Custom branding</li>{% endif %}
+        {% if plan.has_priority_support %}<li class="flex items-center gap-2 text-gray-700"><span class="text-green-500">✓</span> Priority support</li>{% endif %}
+      </ul>
+
+      <a href="{% url 'contact' %}" class="block text-center py-3 rounded-xl font-semibold transition
+        {% if plan.slug == 'professional' %}bg-blue-600 text-white hover:bg-blue-700{% else %}border-2 border-gray-200 text-gray-700 hover:border-blue-400 hover:text-blue-600{% endif %}">
+        {% if plan.price_usd %}Get Started{% else %}Contact Sales{% endif %}
+      </a>
+    </div>
+    {% empty %}
+    <div class="col-span-3 text-center py-10 text-gray-400">No plans available.</div>
+    {% endfor %}
+  </div>
+
+  <div class="text-center mt-12 text-gray-400 text-sm">
+    All plans include a 30-day free trial. No credit card required to start. <a href="{% url 'contact' %}" class="text-blue-600 hover:underline">Contact us</a> for volume or grant pricing.
+  </div>
+</section>
+{% endblock %}

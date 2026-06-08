@@ -1,0 +1,80 @@
+{% extends 'layouts/app.html' %}
+{% block title %}Wellness Check-In — ADVICE{% endblock %}
+{% block page_title %}Daily Wellness Check-In{% endblock %}
+{% block page_subtitle %}How are you feeling today?{% endblock %}
+
+{% block app_content %}
+<div class="max-w-2xl">
+  <div class="card">
+    <div class="mb-6 p-4 bg-blue-50 rounded-xl border border-blue-100">
+      <p class="text-sm text-blue-700">Your responses are confidential and help your counselor support you better. They will only be shared if your scores indicate a need for immediate support.</p>
+    </div>
+
+    <form method="post" class="space-y-8">
+      {% csrf_token %}
+
+      {% for field_name, label, desc in ratings %}{% endfor %}
+
+      {% with fields=True %}
+      <div>
+        <label class="block font-semibold text-gray-800 mb-1">😊 Mood <span class="text-xs text-gray-400 font-normal">— How positive do you feel? (1=Very Low, 10=Excellent)</span></label>
+        <div class="flex items-center gap-3"><span class="text-xs text-gray-400 w-6">1</span>
+        <input type="range" name="mood_score" min="1" max="10" value="5" class="flex-1 accent-blue-600" oninput="document.getElementById('mood_val').textContent=this.value">
+        <span class="text-xs text-gray-400 w-6">10</span><span id="mood_val" class="font-bold text-blue-600 w-6 text-center">5</span></div>
+      </div>
+      <div>
+        <label class="block font-semibold text-gray-800 mb-1">😰 Anxiety Level <span class="text-xs text-gray-400 font-normal">— How anxious do you feel? (1=None, 10=Severe)</span></label>
+        <div class="flex items-center gap-3"><span class="text-xs text-gray-400 w-6">1</span>
+        <input type="range" name="anxiety_level" min="1" max="10" value="5" class="flex-1 accent-orange-500" oninput="document.getElementById('anx_val').textContent=this.value">
+        <span class="text-xs text-gray-400 w-6">10</span><span id="anx_val" class="font-bold text-orange-500 w-6 text-center">5</span></div>
+      </div>
+      <div>
+        <label class="block font-semibold text-gray-800 mb-1">😴 Sleep Quality <span class="text-xs text-gray-400 font-normal">— How well did you sleep? (1=Very Poor, 10=Excellent)</span></label>
+        <div class="flex items-center gap-3"><span class="text-xs text-gray-400 w-6">1</span>
+        <input type="range" name="sleep_quality" min="1" max="10" value="5" class="flex-1 accent-purple-600" oninput="document.getElementById('slp_val').textContent=this.value">
+        <span class="text-xs text-gray-400 w-6">10</span><span id="slp_val" class="font-bold text-purple-600 w-6 text-center">5</span></div>
+      </div>
+      <div>
+        <label class="block font-semibold text-gray-800 mb-1">⚡ Energy Level <span class="text-xs text-gray-400 font-normal">— How energised do you feel? (1=Exhausted, 10=Full of energy)</span></label>
+        <div class="flex items-center gap-3"><span class="text-xs text-gray-400 w-6">1</span>
+        <input type="range" name="energy_level" min="1" max="10" value="5" class="flex-1 accent-yellow-500" oninput="document.getElementById('eng_val').textContent=this.value">
+        <span class="text-xs text-gray-400 w-6">10</span><span id="eng_val" class="font-bold text-yellow-500 w-6 text-center">5</span></div>
+      </div>
+      <div>
+        <label class="block font-semibold text-gray-800 mb-1">😤 Stress Level <span class="text-xs text-gray-400 font-normal">— How stressed are you? (1=Completely relaxed, 10=Extremely stressed)</span></label>
+        <div class="flex items-center gap-3"><span class="text-xs text-gray-400 w-6">1</span>
+        <input type="range" name="stress_level" min="1" max="10" value="5" class="flex-1 accent-red-500" oninput="document.getElementById('str_val').textContent=this.value">
+        <span class="text-xs text-gray-400 w-6">10</span><span id="str_val" class="font-bold text-red-500 w-6 text-center">5</span></div>
+      </div>
+      <div>
+        <label class="block font-semibold text-gray-800 mb-1">🤝 Social Connection <span class="text-xs text-gray-400 font-normal">— How connected to others do you feel? (1=Isolated, 10=Very connected)</span></label>
+        <div class="flex items-center gap-3"><span class="text-xs text-gray-400 w-6">1</span>
+        <input type="range" name="social_connection" min="1" max="10" value="5" class="flex-1 accent-green-500" oninput="document.getElementById('soc_val').textContent=this.value">
+        <span class="text-xs text-gray-400 w-6">10</span><span id="soc_val" class="font-bold text-green-500 w-6 text-center">5</span></div>
+      </div>
+      {% endwith %}
+
+      <div>
+        <label class="block font-semibold text-gray-800 mb-2">What's contributing to how you feel? <span class="text-gray-400 font-normal text-sm">(optional)</span></label>
+        <div class="flex flex-wrap gap-2">
+          {% for trigger in triggers_options %}
+          <label class="flex items-center gap-2 px-3 py-2 border border-gray-200 rounded-xl cursor-pointer hover:border-blue-400 transition has-[:checked]:border-blue-500 has-[:checked]:bg-blue-50">
+            <input type="checkbox" name="triggers" value="{{ trigger }}" class="accent-blue-600"> <span class="text-sm">{{ trigger }}</span>
+          </label>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div>
+        <label class="block font-semibold text-gray-800 mb-2">Any additional thoughts or reflections? <span class="text-gray-400 font-normal text-sm">(optional)</span></label>
+        <textarea name="notes" rows="3" class="form-input" placeholder="Write anything you'd like your counselor to know..."></textarea>
+      </div>
+
+      <div class="flex gap-3">
+        <button type="submit" class="btn-primary flex-1 py-3.5">Submit Check-In</button>
+        <a href="{% url 'wellness' %}" class="btn-secondary">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,74 @@
+{% extends 'layouts/app.html' %}
+{% block title %}Goals — ADVICE{% endblock %}
+{% block page_title %}Progress Goals{% endblock %}
+{% block page_subtitle %}Track your personal development milestones{% endblock %}
+
+{% block app_content %}
+<div class="space-y-5">
+  <div class="flex items-center justify-between">
+    <div class="flex gap-2">
+      {% for val, label in statuses %}
+      <a href="?status={{ val }}" class="px-3 py-1.5 rounded-xl text-sm font-medium transition
+        {% if status_filter == val %}bg-blue-600 text-white{% else %}bg-white text-gray-600 border border-gray-200 hover:border-blue-400{% endif %}">
+        {{ label }}
+      </a>
+      {% endfor %}
+      {% if status_filter %}<a href="?" class="px-3 py-1.5 rounded-xl text-sm text-gray-500 hover:text-gray-700">✕ Clear</a>{% endif %}
+    </div>
+    <a href="{% url 'create_goal' %}" class="btn-primary">+ New Goal</a>
+  </div>
+
+  {% if goals %}
+  <div class="grid md:grid-cols-2 gap-4">
+    {% for goal in goals %}
+    <a href="{% url 'goal_detail' goal.id %}" class="card block hover:shadow-md transition hover:border-blue-200 border border-transparent">
+      <div class="flex items-start justify-between mb-3">
+        <div class="flex-1 min-w-0">
+          <p class="font-bold text-gray-900 truncate">{{ goal.title }}</p>
+          {% if user.is_counselor %}
+          <p class="text-xs text-gray-400 mt-0.5">{{ goal.student.full_name }}</p>
+          {% endif %}
+        </div>
+        <span class="badge ml-3 flex-shrink-0
+          {% if goal.status == 'active' %}bg-blue-100 text-blue-700
+          {% elif goal.status == 'completed' %}bg-green-100 text-green-700
+          {% elif goal.status == 'on_hold' %}bg-yellow-100 text-yellow-700
+          {% else %}bg-gray-100 text-gray-600{% endif %}">
+          {{ goal.get_status_display }}
+        </span>
+      </div>
+      <p class="text-sm text-gray-500 mb-4 line-clamp-2">{{ goal.description }}</p>
+
+      <!-- Progress bar -->
+      <div class="mb-2">
+        <div class="flex justify-between text-xs text-gray-500 mb-1">
+          <span>Progress</span><span class="font-semibold">{{ goal.progress_percentage }}%</span>
+        </div>
+        <div class="h-2 bg-gray-100 rounded-full overflow-hidden">
+          <div class="h-full rounded-full transition-all
+            {% if goal.progress_percentage >= 75 %}bg-green-500
+            {% elif goal.progress_percentage >= 40 %}bg-yellow-500
+            {% else %}bg-blue-500{% endif %}"
+            style="width: {{ goal.progress_percentage }}%"></div>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-between mt-3 pt-3 border-t border-gray-100">
+        <span class="badge bg-gray-100 text-gray-600">{{ goal.get_category_display }}</span>
+        {% if goal.target_date %}
+        <span class="text-xs text-gray-400">Target: {{ goal.target_date|date:"d M Y" }}</span>
+        {% endif %}
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="card text-center py-14">
+    <p class="text-5xl mb-4">🎯</p>
+    <p class="text-gray-500 text-lg mb-2">No goals found</p>
+    <p class="text-gray-400 text-sm mb-6">Goals are set collaboratively with your counselor.</p>
+    <a href="{% url 'create_goal' %}" class="btn-primary">Create First Goal</a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

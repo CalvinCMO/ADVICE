@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<nav class="bg-white shadow-sm border-b border-gray-100 sticky top-0 z-50">
+  <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+    <a href="{% url 'home' %}" class="flex items-center gap-3">
+      <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+        <span class="text-white font-bold text-sm">A</span>
+      </div>
+      <span class="text-xl font-bold text-gray-900">ADVICE</span>
+    </a>
+    <div class="hidden md:flex items-center gap-6">
+      <a href="{% url 'home' %}" class="text-gray-600 hover:text-blue-600 text-sm font-medium transition">Home</a>
+      <a href="{% url 'about' %}" class="text-gray-600 hover:text-blue-600 text-sm font-medium transition">About</a>
+      <a href="{% url 'plans' %}" class="text-gray-600 hover:text-blue-600 text-sm font-medium transition">Pricing</a>
+      <a href="{% url 'contact' %}" class="text-gray-600 hover:text-blue-600 text-sm font-medium transition">Contact</a>
+    </div>
+    <div class="flex items-center gap-3">
+      <a href="{% url 'login' %}" class="text-gray-600 hover:text-blue-600 text-sm font-medium transition">Log in</a>
+      <a href="{% url 'register' %}" class="bg-blue-600 text-white px-4 py-2 rounded-xl text-sm font-medium hover:bg-blue-700 transition">Get Started</a>
+    </div>
+  </div>
+</nav>
+
+{% if messages %}
+<div class="max-w-7xl mx-auto px-6 pt-4 space-y-2">
+  {% for message in messages %}
+  <div class="px-4 py-3 rounded-xl text-sm font-medium
+    {% if message.tags == 'success' %}bg-green-50 text-green-800 border border-green-200
+    {% elif message.tags == 'error' %}bg-red-50 text-red-800 border border-red-200
+    {% else %}bg-blue-50 text-blue-800 border border-blue-200{% endif %}">
+    {{ message }}
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+
+<main>{% block pub_content %}{% endblock %}</main>
+
+<footer class="bg-gray-900 text-gray-400 py-12 mt-16">
+  <div class="max-w-7xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-8">
+    <div>
+      <h3 class="text-white font-semibold mb-3">ADVICE</h3>
+      <p class="text-sm">Digital counseling &amp; wellness for tertiary institutions.</p>
+    </div>
+    <div>
+      <h3 class="text-white font-semibold mb-3">Platform</h3>
+      <ul class="space-y-1 text-sm">
+        <li><a href="{% url 'plans' %}" class="hover:text-white transition">Pricing</a></li>
+        <li><a href="{% url 'about' %}" class="hover:text-white transition">About</a></li>
+      </ul>
+    </div>
+    <div>
+      <h3 class="text-white font-semibold mb-3">Legal</h3>
+      <ul class="space-y-1 text-sm">
+        <li><a href="{% url 'privacy' %}" class="hover:text-white transition">Privacy Policy</a></li>
+        <li><a href="{% url 'terms' %}" class="hover:text-white transition">Terms of Service</a></li>
+      </ul>
+    </div>
+    <div>
+      <h3 class="text-white font-semibold mb-3">Support</h3>
+      <ul class="space-y-1 text-sm">
+        <li><a href="{% url 'contact' %}" class="hover:text-white transition">Contact</a></li>
+        <li><a href="mailto:support@advice.com" class="hover:text-white transition">support@advice.com</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="max-w-7xl mx-auto px-6 mt-8 pt-6 border-t border-gray-800 text-sm text-center">
+    &copy; {% now "Y" %} ADVICE Platform. All rights reserved.
+  </div>
+</footer>
+
+{% endblock %}

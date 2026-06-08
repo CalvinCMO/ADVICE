@@ -1,0 +1,88 @@
+{% extends 'layouts/app.html' %}
+{% block title %}Messages — ADVICE{% endblock %}
+{% block page_title %}{% if other_user %}{{ other_user.full_name }}{% else %}Conversation{% endif %}{% endblock %}
+
+{% block app_content %}
+<div class="flex gap-6 h-[calc(100vh-11rem)]">
+
+  <!-- Sidebar list -->
+  <div class="w-72 flex-shrink-0 bg-white rounded-2xl border border-gray-100 flex flex-col overflow-hidden">
+    <div class="p-4 border-b border-gray-100 flex items-center justify-between">
+      <h2 class="font-bold text-gray-900 text-sm">Messages</h2>
+      <a href="{% url 'start_conversation' %}" class="w-7 h-7 bg-blue-600 rounded-lg flex items-center justify-center text-white hover:bg-blue-700 text-base" title="New">+</a>
+    </div>
+    <div class="flex-1 overflow-y-auto divide-y divide-gray-50">
+      <a href="{% url 'conversations' %}" class="block px-4 py-3 text-sm text-blue-600 hover:bg-blue-50 transition">← All Conversations</a>
+      {% if other_user %}
+      <div class="flex items-center gap-3 p-4 bg-blue-50">
+        <div class="w-9 h-9 rounded-full bg-blue-200 flex items-center justify-center font-bold text-blue-700 text-sm">{{ other_user.first_name.0 }}{{ other_user.last_name.0 }}</div>
+        <div>
+          <p class="font-semibold text-sm text-gray-900">{{ other_user.full_name }}</p>
+          <p class="text-xs text-gray-400">{{ other_user.get_role_display }}</p>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Chat window -->
+  <div class="flex-1 bg-white rounded-2xl border border-gray-100 flex flex-col overflow-hidden">
+
+    <!-- Header -->
+    <div class="p-4 border-b border-gray-100 flex items-center gap-3">
+      {% if other_user %}
+      <div class="w-9 h-9 rounded-full bg-blue-100 flex items-center justify-center font-bold text-blue-700 text-sm">{{ other_user.first_name.0 }}{{ other_user.last_name.0 }}</div>
+      <div>
+        <p class="font-semibold text-gray-900">{{ other_user.full_name }}</p>
+        <p class="text-xs text-gray-400">{{ other_user.get_role_display }}</p>
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- Messages -->
+    <div class="flex-1 overflow-y-auto p-5 space-y-4" id="msg-container">
+      {% for msg in messages %}
+      <div class="flex {% if msg.sender == request.user %}justify-end{% else %}justify-start{% endif %}">
+        <div class="max-w-xs lg:max-w-md">
+          {% if msg.sender != request.user %}
+          <p class="text-xs text-gray-400 mb-1 ml-1">{{ msg.sender.first_name }}</p>
+          {% endif %}
+          <div class="px-4 py-2.5 rounded-2xl text-sm leading-relaxed
+            {% if msg.sender == request.user %}
+              bg-blue-600 text-white rounded-br-sm
+            {% else %}
+              bg-gray-100 text-gray-800 rounded-bl-sm
+            {% endif %}">
+            {{ msg.content }}
+          </div>
+          <p class="text-xs text-gray-400 mt-1 {% if msg.sender == request.user %}text-right mr-1{% else %}ml-1{% endif %}">{{ msg.sent_at|date:"H:i" }}</p>
+        </div>
+      </div>
+      {% empty %}
+      <div class="text-center py-10 text-gray-400">
+        <p class="text-4xl mb-2">👋</p>
+        <p class="text-sm">No messages yet. Say hello!</p>
+      </div>
+      {% endfor %}
+    </div>
+
+    <!-- Input -->
+    <div class="p-4 border-t border-gray-100">
+      <form method="post" class="flex gap-3">
+        {% csrf_token %}
+        <input type="text" name="content" class="flex-1 px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition text-sm" placeholder="Type a message..." autocomplete="off" autofocus>
+        <button type="submit" class="bg-blue-600 text-white px-5 py-3 rounded-xl hover:bg-blue-700 transition font-medium text-sm">Send →</button>
+      </form>
+    </div>
+  </div>
+
+</div>
+
+{% block extra_js %}
+<script>
+  // Auto-scroll to bottom on load
+  const container = document.getElementById('msg-container');
+  if (container) container.scrollTop = container.scrollHeight;
+</script>
+{% endblock %}
+{% endblock %}

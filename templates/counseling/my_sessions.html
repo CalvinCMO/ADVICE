@@ -1,0 +1,53 @@
+{% extends 'layouts/app.html' %}
+{% block title %}My Sessions — ADVICE{% endblock %}
+{% block page_title %}Sessions{% endblock %}
+
+{% block app_content %}
+<div class="space-y-4">
+  <!-- Tabs -->
+  <div class="flex gap-1 bg-gray-100 p-1 rounded-xl w-fit">
+    <a href="?tab=upcoming" class="px-4 py-2 rounded-lg text-sm font-medium transition {% if tab == 'upcoming' %}bg-white shadow text-blue-700{% else %}text-gray-500 hover:text-gray-700{% endif %}">Upcoming</a>
+    <a href="?tab=past" class="px-4 py-2 rounded-lg text-sm font-medium transition {% if tab == 'past' %}bg-white shadow text-blue-700{% else %}text-gray-500 hover:text-gray-700{% endif %}">Past</a>
+    <a href="?tab=cancelled" class="px-4 py-2 rounded-lg text-sm font-medium transition {% if tab == 'cancelled' %}bg-white shadow text-blue-700{% else %}text-gray-500 hover:text-gray-700{% endif %}">Cancelled</a>
+  </div>
+
+  <div class="card">
+    {% if sessions %}
+    <div class="space-y-3">
+      {% for session in sessions %}
+      <div class="flex items-center justify-between p-4 border border-gray-100 rounded-xl hover:border-blue-200 transition">
+        <div class="flex items-center gap-4">
+          <div class="w-11 h-11 rounded-full bg-blue-100 flex items-center justify-center font-bold text-blue-700">
+            {% if user.is_student %}{{ session.counselor.first_name.0 }}{{ session.counselor.last_name.0 }}
+            {% else %}{{ session.student.first_name.0 }}{{ session.student.last_name.0 }}{% endif %}
+          </div>
+          <div>
+            <p class="font-semibold text-gray-900">
+              {% if user.is_student %}{{ session.counselor.full_name }}{% else %}{{ session.student.full_name }}{% endif %}
+            </p>
+            <p class="text-sm text-gray-500">{{ session.scheduled_at|date:"d M Y, H:i" }} · {{ session.get_session_type_display }}</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-3">
+          <span class="badge
+            {% if session.status == 'scheduled' %}bg-blue-100 text-blue-700
+            {% elif session.status == 'in_progress' %}bg-green-100 text-green-700
+            {% elif session.status == 'completed' %}bg-gray-100 text-gray-600
+            {% else %}bg-red-100 text-red-600{% endif %}">
+            {{ session.get_status_display }}
+          </span>
+          <a href="{% url 'session_detail' session.id %}" class="btn-secondary text-xs py-1.5">View</a>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-12">
+      <p class="text-5xl mb-4">📅</p>
+      <p class="text-gray-500 mb-4">No {{ tab }} sessions</p>
+      {% if user.is_student %}<a href="{% url 'book_session' %}" class="btn-primary">Book a Session</a>{% endif %}
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

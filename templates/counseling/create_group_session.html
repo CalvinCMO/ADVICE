@@ -1,0 +1,13 @@
+{% extends 'layouts/app.html' %}{% block title %}Create Group Session{% endblock %}{% block page_title %}Create Group Session{% endblock %}
+{% block app_content %}<div class="max-w-2xl"><div class="card"><form method="post" class="space-y-5">{% csrf_token %}
+<div><label class="block text-sm font-semibold text-gray-700 mb-1.5">Title</label><input type="text" name="title" class="form-input" placeholder="e.g. Stress Management Workshop" required></div>
+<div><label class="block text-sm font-semibold text-gray-700 mb-1.5">Description</label><textarea name="description" rows="3" class="form-input" required></textarea></div>
+<div><label class="block text-sm font-semibold text-gray-700 mb-1.5">Topic</label><input type="text" name="topic" class="form-input" placeholder="e.g. Anxiety, Academic Stress"></div>
+<div class="grid grid-cols-2 gap-4">
+<div><label class="block text-sm font-semibold text-gray-700 mb-1.5">Date & Time</label><input type="datetime-local" name="scheduled_at" class="form-input" required></div>
+<div><label class="block text-sm font-semibold text-gray-700 mb-1.5">Duration (min)</label><input type="number" name="duration_minutes" value="90" class="form-input"></div>
+<div><label class="block text-sm font-semibold text-gray-700 mb-1.5">Max Participants</label><input type="number" name="max_participants" value="15" class="form-input"></div>
+</div>
+<label class="flex items-center gap-2"><input type="checkbox" name="is_anonymous"> <span class="text-sm">Anonymous session (hide participant names)</span></label>
+<div class="flex gap-3"><button type="submit" class="btn-primary flex-1">Create Session</button><a href="{% url 'group_sessions' %}" class="btn-secondary">Cancel</a></div>
+</form></div></div>{% endblock %}

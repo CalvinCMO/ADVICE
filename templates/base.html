@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}ADVICE Platform{% endblock %}</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: { 50:'#eff6ff',100:'#dbeafe',500:'#3b82f6',600:'#2563eb',700:'#1d4ed8',800:'#1e40af',900:'#1e3a8a' },
+            accent:  { 500:'#10b981',600:'#059669' }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    .form-input  { display:block; width:100%; padding:0.75rem 1rem; border:1px solid #e5e7eb; border-radius:0.75rem; outline:none; transition:all .15s; }
+    .form-input:focus { border-color:#3b82f6; box-shadow:0 0 0 2px rgba(59,130,246,.25); }
+    .btn-primary   { display:inline-flex; align-items:center; background:#2563eb; color:#fff; padding:0.625rem 1.25rem; border-radius:0.75rem; font-weight:500; transition:background .15s; cursor:pointer; border:none; }
+    .btn-primary:hover { background:#1d4ed8; }
+    .btn-secondary { display:inline-flex; align-items:center; background:#f3f4f6; color:#374151; padding:0.625rem 1.25rem; border-radius:0.75rem; font-weight:500; transition:background .15s; cursor:pointer; border:none; }
+    .btn-secondary:hover { background:#e5e7eb; }
+    .btn-danger    { display:inline-flex; align-items:center; background:#dc2626; color:#fff; padding:0.625rem 1.25rem; border-radius:0.75rem; font-weight:500; transition:background .15s; cursor:pointer; border:none; }
+    .btn-danger:hover { background:#b91c1c; }
+    .card  { background:#fff; border-radius:1rem; box-shadow:0 1px 3px rgba(0,0,0,.06); border:1px solid #f3f4f6; padding:1.5rem; }
+    .badge { display:inline-flex; align-items:center; padding:0.125rem 0.625rem; border-radius:9999px; font-size:0.75rem; font-weight:500; }
+  </style>
+  {% block extra_head %}{% endblock %}
+</head>
+<body class="bg-gray-50 font-sans antialiased">
+
+{% block content %}{% endblock %}
+
+{% block extra_js %}{% endblock %}
+
+<!-- ── Shared flash messages helper (used by layout includes) ── -->
+</body>
+</html>

@@ -1,0 +1,45 @@
+{% extends 'layouts/app.html' %}
+{% block title %}Notifications — ADVICE{% endblock %}
+{% block page_title %}Notifications{% endblock %}
+
+{% block app_content %}
+<div class="max-w-2xl space-y-4">
+  <div class="flex items-center justify-between">
+    <p class="text-sm text-gray-500">{{ notifications|length }} notification{{ notifications|length|pluralize }}</p>
+    {% if notifications %}
+    <a href="{% url 'mark_all_read' %}" class="text-sm text-blue-600 hover:underline">Mark all as read</a>
+    {% endif %}
+  </div>
+
+  {% if notifications %}
+  <div class="space-y-2">
+    {% for notif in notifications %}
+    <a href="{% url 'mark_notification_read' notif.id %}" class="block card hover:shadow-md transition {% if not notif.is_read %}border-l-4 border-blue-500 bg-blue-50/40{% endif %}">
+      <div class="flex items-start gap-4">
+        <div class="w-10 h-10 rounded-full flex items-center justify-center text-2xl flex-shrink-0
+          {% if not notif.is_read %}bg-blue-100{% else %}bg-gray-100{% endif %}">
+          {{ notif.icon }}
+        </div>
+        <div class="flex-1 min-w-0">
+          <div class="flex items-baseline justify-between gap-2">
+            <p class="font-semibold text-sm text-gray-900 {% if not notif.is_read %}text-blue-800{% endif %}">{{ notif.title }}</p>
+            <span class="text-xs text-gray-400 flex-shrink-0">{{ notif.created_at|date:"d M, H:i" }}</span>
+          </div>
+          <p class="text-sm text-gray-600 mt-0.5">{{ notif.body }}</p>
+          {% if not notif.is_read %}
+          <span class="badge bg-blue-100 text-blue-700 mt-1 text-xs">New</span>
+          {% endif %}
+        </div>
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="card text-center py-14">
+    <p class="text-5xl mb-4">🔔</p>
+    <p class="text-gray-500">You're all caught up!</p>
+    <p class="text-gray-400 text-sm mt-1">No notifications right now.</p>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

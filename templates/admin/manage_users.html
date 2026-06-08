@@ -1,0 +1,87 @@
+{% extends 'layouts/app.html' %}
+{% block title %}Manage Users — ADVICE{% endblock %}
+{% block page_title %}Manage Users{% endblock %}
+{% block page_subtitle %}{{ institution.name }}{% endblock %}
+
+{% block app_content %}
+<div class="space-y-4">
+  <!-- Search & filters -->
+  <div class="card">
+    <form method="get" class="flex flex-wrap gap-3 items-end">
+      <div class="flex-1 min-w-48">
+        <label class="block text-xs font-semibold text-gray-500 mb-1.5">Search</label>
+        <input type="text" name="q" value="{{ q }}" placeholder="Name or email..." class="form-input text-sm">
+      </div>
+      <div>
+        <label class="block text-xs font-semibold text-gray-500 mb-1.5">Role</label>
+        <select name="role" class="form-input text-sm">
+          <option value="">All Roles</option>
+          <option value="student" {% if role_filter == 'student' %}selected{% endif %}>Students</option>
+          <option value="counselor" {% if role_filter == 'counselor' %}selected{% endif %}>Counselors</option>
+          <option value="institution_admin" {% if role_filter == 'institution_admin' %}selected{% endif %}>Admins</option>
+        </select>
+      </div>
+      <button type="submit" class="btn-primary text-sm">Search</button>
+      <a href="{% url 'create_invitation' %}" class="bg-green-600 text-white px-4 py-2.5 rounded-xl text-sm font-medium hover:bg-green-700 transition">+ Invite User</a>
+    </form>
+  </div>
+
+  <div class="card">
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm">
+        <thead>
+          <tr class="border-b border-gray-100">
+            <th class="text-left py-3 px-2 text-xs font-semibold text-gray-400 uppercase tracking-wider">User</th>
+            <th class="text-left py-3 px-2 text-xs font-semibold text-gray-400 uppercase tracking-wider">Role</th>
+            <th class="text-left py-3 px-2 text-xs font-semibold text-gray-400 uppercase tracking-wider">Joined</th>
+            <th class="text-left py-3 px-2 text-xs font-semibold text-gray-400 uppercase tracking-wider">Status</th>
+            <th class="text-left py-3 px-2 text-xs font-semibold text-gray-400 uppercase tracking-wider">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-50">
+          {% for u in users %}
+          <tr class="hover:bg-gray-50 transition">
+            <td class="py-3 px-2">
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-xs font-bold text-blue-700 flex-shrink-0">{{ u.first_name.0 }}{{ u.last_name.0 }}</div>
+                <div>
+                  <p class="font-semibold text-gray-900">{{ u.full_name }}</p>
+                  <p class="text-xs text-gray-400">{{ u.email }}</p>
+                </div>
+              </div>
+            </td>
+            <td class="py-3 px-2">
+              <span class="badge
+                {% if u.role == 'student' %}bg-blue-100 text-blue-700
+                {% elif u.role == 'counselor' %}bg-green-100 text-green-700
+                {% else %}bg-purple-100 text-purple-700{% endif %}">
+                {{ u.get_role_display }}
+              </span>
+            </td>
+            <td class="py-3 px-2 text-gray-400">{{ u.created_at|date:"d M Y" }}</td>
+            <td class="py-3 px-2">
+              <span class="badge {% if u.is_active %}bg-green-100 text-green-700{% else %}bg-red-100 text-red-600{% endif %}">
+                {% if u.is_active %}Active{% else %}Inactive{% endif %}
+              </span>
+            </td>
+            <td class="py-3 px-2">
+              {% if u != request.user %}
+              <form method="post" action="{% url 'toggle_user_status' u.id %}" class="inline">
+                {% csrf_token %}
+                <button type="submit" class="text-xs {% if u.is_active %}text-red-600 hover:text-red-800{% else %}text-green-600 hover:text-green-800{% endif %} font-medium hover:underline"
+                  onclick="return confirm('{% if u.is_active %}Deactivate{% else %}Activate{% endif %} {{ u.full_name }}?')">
+                  {% if u.is_active %}Deactivate{% else %}Activate{% endif %}
+                </button>
+              </form>
+              {% endif %}
+            </td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="5" class="py-10 text-center text-gray-400">No users found.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

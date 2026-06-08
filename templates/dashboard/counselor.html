@@ -1,0 +1,112 @@
+{% extends 'layouts/app.html' %}
+{% block title %}Counselor Dashboard — ADVICE{% endblock %}
+{% block page_title %}Counselor Dashboard{% endblock %}
+{% block page_subtitle %}Welcome back, {{ user.first_name }}{% endblock %}
+
+{% block app_content %}
+<div class="space-y-6">
+
+  <!-- Stats -->
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+    <div class="card text-center">
+      <p class="text-3xl font-extrabold text-blue-600">{{ today_sessions_count }}</p>
+      <p class="text-sm text-gray-500 mt-1">Sessions Today</p>
+    </div>
+    <div class="card text-center">
+      <p class="text-3xl font-extrabold text-indigo-600">{{ upcoming_sessions.count }}</p>
+      <p class="text-sm text-gray-500 mt-1">Upcoming Sessions</p>
+    </div>
+    <div class="card text-center">
+      <p class="text-3xl font-extrabold text-green-600">{{ student_count }}</p>
+      <p class="text-sm text-gray-500 mt-1">Students</p>
+    </div>
+    <div class="card text-center">
+      <p class="text-3xl font-extrabold {% if active_alerts %}text-red-600{% else %}text-gray-300{% endif %}">{{ active_alerts.count }}</p>
+      <p class="text-sm text-gray-500 mt-1">Crisis Alerts</p>
+    </div>
+  </div>
+
+  <div class="grid md:grid-cols-3 gap-6">
+
+    <!-- Upcoming sessions -->
+    <div class="card col-span-2">
+      <div class="flex items-center justify-between mb-5">
+        <h2 class="font-bold text-gray-900 text-lg">Upcoming Sessions</h2>
+        <a href="{% url 'my_sessions' %}" class="text-sm text-blue-600 hover:underline">View all</a>
+      </div>
+      {% if upcoming_sessions %}
+      <div class="space-y-3">
+        {% for session in upcoming_sessions %}
+        <div class="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center font-bold text-green-700 text-sm">{{ session.student.first_name.0 }}{{ session.student.last_name.0 }}</div>
+            <div>
+              <p class="font-semibold text-gray-900 text-sm">{{ session.student.full_name }}</p>
+              <p class="text-xs text-gray-500">{{ session.scheduled_at|date:"D, d M \a\t H:i" }} · {{ session.get_mode_display }}</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            {% if session.status == 'in_progress' %}
+            <span class="badge bg-green-100 text-green-700">In Progress</span>
+            {% endif %}
+            <a href="{% url 'session_detail' session.id %}" class="btn-primary text-xs py-1.5">View</a>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <div class="text-center py-8 text-gray-400">
+        <p class="text-4xl mb-2">📅</p>
+        <p class="text-sm">No upcoming sessions</p>
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- Alerts & flagged -->
+    <div class="space-y-4">
+      {% if active_alerts %}
+      <div class="card border border-red-100">
+        <h2 class="font-bold text-gray-900 mb-3 flex items-center gap-2">🚨 Crisis Alerts</h2>
+        <div class="space-y-2">
+          {% for alert in active_alerts %}
+          <div class="p-3 bg-red-50 rounded-xl border border-red-100">
+            <p class="font-semibold text-sm text-gray-900">{{ alert.student.full_name }}</p>
+            <p class="text-xs text-red-600 font-medium">{{ alert.get_severity_display }}</p>
+            <p class="text-xs text-gray-500 mt-1 truncate">{{ alert.trigger_reason }}</p>
+            <a href="{% url 'crisis_alerts' %}" class="text-xs text-red-600 font-semibold hover:underline">Review →</a>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+
+      {% if flagged_wellness %}
+      <div class="card border border-yellow-100">
+        <h2 class="font-bold text-gray-900 mb-3">⚠️ Flagged Wellness</h2>
+        <div class="space-y-2">
+          {% for check in flagged_wellness %}
+          <div class="p-3 bg-yellow-50 rounded-xl">
+            <p class="font-semibold text-sm">{{ check.student.full_name }}</p>
+            <p class="text-xs text-gray-500">Mood: {{ check.mood_score }}/10 · Anxiety: {{ check.anxiety_level }}/10</p>
+            <p class="text-xs text-gray-400">{{ check.date }}</p>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+
+      <div class="card">
+        <h2 class="font-bold text-gray-900 mb-3">Quick Actions</h2>
+        <div class="space-y-2">
+          <a href="{% url 'my_sessions' %}" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-gray-50 transition text-sm">📅 All Sessions</a>
+          <a href="{% url 'crisis_alerts' %}" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-gray-50 transition text-sm">🚨 Crisis Alerts</a>
+          <a href="{% url 'analytics' %}" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-gray-50 transition text-sm">📊 Analytics</a>
+          <a href="{% url 'goals' %}" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-gray-50 transition text-sm">🎯 Student Goals</a>
+          <a href="{% url 'create_group_session' %}" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-gray-50 transition text-sm">👥 Create Group Session</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

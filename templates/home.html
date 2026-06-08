@@ -1,0 +1,166 @@
+{% extends 'layouts/public.html' %}
+{% block title %}ADVICE — Digital Counseling & Wellness Platform{% endblock %}
+
+{% block pub_content %}
+
+<!-- Hero -->
+<section class="bg-gradient-to-br from-blue-700 via-blue-600 to-indigo-700 text-white py-24 px-6">
+  <div class="max-w-5xl mx-auto text-center">
+    <span class="inline-block bg-white/20 text-white text-sm font-semibold px-4 py-1.5 rounded-full mb-6">Mental Health Support for Universities</span>
+    <h1 class="text-5xl font-extrabold mb-6 leading-tight">Your Mental Health<br>Matters. We're Here.</h1>
+    <p class="text-xl text-blue-100 mb-10 max-w-2xl mx-auto">ADVICE connects university students with certified counselors for mental health support, early intervention, and personal development — all in one secure platform.</p>
+    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+      <a href="{% url 'register' %}" class="bg-white text-blue-700 px-8 py-4 rounded-2xl font-bold hover:bg-blue-50 transition shadow-lg">Get Started Free</a>
+      <a href="{% url 'about' %}" class="bg-white/20 text-white border border-white/30 px-8 py-4 rounded-2xl font-bold hover:bg-white/30 transition">Learn More</a>
+    </div>
+  </div>
+</section>
+
+<!-- Stats -->
+<section class="bg-white py-12 border-b border-gray-100">
+  <div class="max-w-5xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+    <div><p class="text-3xl font-extrabold text-blue-600">50+</p><p class="text-gray-500 text-sm mt-1">Partner Universities</p></div>
+    <div><p class="text-3xl font-extrabold text-blue-600">10k+</p><p class="text-gray-500 text-sm mt-1">Students Supported</p></div>
+    <div><p class="text-3xl font-extrabold text-blue-600">500+</p><p class="text-gray-500 text-sm mt-1">Certified Counselors</p></div>
+    <div><p class="text-3xl font-extrabold text-blue-600">98%</p><p class="text-gray-500 text-sm mt-1">Student Satisfaction</p></div>
+  </div>
+</section>
+
+<!-- Features -->
+<section class="py-20 px-6 bg-gray-50">
+  <div class="max-w-6xl mx-auto">
+    <div class="text-center mb-14">
+      <h2 class="text-4xl font-extrabold text-gray-900 mb-4">Everything Your Institution Needs</h2>
+      <p class="text-gray-500 text-lg max-w-2xl mx-auto">A complete mental health support system — from booking to analytics.</p>
+    </div>
+    <div class="grid md:grid-cols-3 gap-6">
+      <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition">
+        <div class="text-3xl mb-3">📅</div>
+        <h3 class="font-bold text-gray-900 text-lg mb-2">Session Booking</h3>
+        <p class="text-gray-500 text-sm">Students book individual or group counseling sessions in seconds with any verified counselor.</p>
+      </div>
+      <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition">
+        <div class="text-3xl mb-3">💬</div>
+        <h3 class="font-bold text-gray-900 text-lg mb-2">Secure Messaging</h3>
+        <p class="text-gray-500 text-sm">Private, confidential messaging between students and counselors — always within the platform.</p>
+      </div>
+      <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition">
+        <div class="text-3xl mb-3">💚</div>
+        <h3 class="font-bold text-gray-900 text-lg mb-2">Wellness Tracking</h3>
+        <p class="text-gray-500 text-sm">Daily mood, anxiety, and sleep check-ins with automated scoring and 14-day trend charts.</p>
+      </div>
+      <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition">
+        <div class="text-3xl mb-3">🚨</div>
+        <h3 class="font-bold text-gray-900 text-lg mb-2">Crisis Detection</h3>
+        <p class="text-gray-500 text-sm">Auto-detects distress signals from wellness check-ins and immediately alerts the assigned counselor.</p>
+      </div>
+      <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition">
+        <div class="text-3xl mb-3">🎯</div>
+        <h3 class="font-bold text-gray-900 text-lg mb-2">Goal Tracking</h3>
+        <p class="text-gray-500 text-sm">Collaborative student-counselor goal setting with milestone tracking and progress visualization.</p>
+      </div>
+      <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition">
+        <div class="text-3xl mb-3">📊</div>
+        <h3 class="font-bold text-gray-900 text-lg mb-2">Analytics Dashboard</h3>
+        <p class="text-gray-500 text-sm">Institution-wide wellness trends, session statistics, and crisis reports for administrators.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- How It Works -->
+<section class="py-20 px-6 bg-white">
+  <div class="max-w-5xl mx-auto text-center">
+    <h2 class="text-4xl font-extrabold text-gray-900 mb-4">How It Works</h2>
+    <p class="text-gray-500 mb-14">Three simple steps to better student wellbeing.</p>
+    <div class="grid md:grid-cols-3 gap-10">
+      <div>
+        <div class="w-14 h-14 bg-blue-600 text-white rounded-2xl flex items-center justify-center text-2xl font-extrabold mx-auto mb-4">1</div>
+        <h3 class="font-bold text-gray-900 text-lg mb-2">Institution Signs Up</h3>
+        <p class="text-gray-500 text-sm">Your institution registers, invites counselors and students, and customises the platform.</p>
+      </div>
+      <div>
+        <div class="w-14 h-14 bg-blue-600 text-white rounded-2xl flex items-center justify-center text-2xl font-extrabold mx-auto mb-4">2</div>
+        <h3 class="font-bold text-gray-900 text-lg mb-2">Students Connect</h3>
+        <p class="text-gray-500 text-sm">Students register, complete daily wellness check-ins, and book sessions with counselors.</p>
+      </div>
+      <div>
+        <div class="w-14 h-14 bg-blue-600 text-white rounded-2xl flex items-center justify-center text-2xl font-extrabold mx-auto mb-4">3</div>
+        <h3 class="font-bold text-gray-900 text-lg mb-2">Counselors Support</h3>
+        <p class="text-gray-500 text-sm">Counselors run sessions, track goals, and respond to crisis alerts — all from one dashboard.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Roles -->
+<section class="py-20 px-6 bg-gray-50">
+  <div class="max-w-5xl mx-auto">
+    <h2 class="text-4xl font-extrabold text-gray-900 text-center mb-14">Built for Everyone</h2>
+    <div class="grid md:grid-cols-3 gap-6">
+      <div class="bg-white rounded-2xl p-8 border border-gray-100 shadow-sm">
+        <div class="text-4xl mb-4">🎓</div>
+        <h3 class="font-bold text-gray-900 text-xl mb-3">Students</h3>
+        <ul class="space-y-2 text-sm text-gray-500">
+          <li class="flex items-center gap-2"><span class="text-green-500 font-bold">✓</span> Book sessions in seconds</li>
+          <li class="flex items-center gap-2"><span class="text-green-500 font-bold">✓</span> Daily wellness check-ins</li>
+          <li class="flex items-center gap-2"><span class="text-green-500 font-bold">✓</span> Track personal goals</li>
+          <li class="flex items-center gap-2"><span class="text-green-500 font-bold">✓</span> Join group sessions</li>
+          <li class="flex items-center gap-2"><span class="text-green-500 font-bold">✓</span> Private messaging</li>
+        </ul>
+      </div>
+      <div class="bg-white rounded-2xl p-8 border border-blue-200 shadow-md">
+        <div class="text-4xl mb-4">👨‍⚕️</div>
+        <h3 class="font-bold text-gray-900 text-xl mb-3">Counselors</h3>
+        <ul class="space-y-2 text-sm text-gray-500">
+          <li class="flex items-center gap-2"><span class="text-green-500 font-bold">✓</span> Session management</li>
+          <li class="flex items-center gap-2"><span class="text-green-500 font-bold">✓</span> Crisis alert dashboard</li>
+          <li class="flex items-center gap-2"><span class="text-green-500 font-bold">✓</span> Student progress reports</li>
+          <li class="flex items-center gap-2"><span class="text-green-500 font-bold">✓</span> Facilitate group sessions</li>
+          <li class="flex items-center gap-2"><span class="text-green-500 font-bold">✓</span> Confidential notes</li>
+        </ul>
+      </div>
+      <div class="bg-white rounded-2xl p-8 border border-gray-100 shadow-sm">
+        <div class="text-4xl mb-4">🏫</div>
+        <h3 class="font-bold text-gray-900 text-xl mb-3">Institutions</h3>
+        <ul class="space-y-2 text-sm text-gray-500">
+          <li class="flex items-center gap-2"><span class="text-green-500 font-bold">✓</span> Multi-tenant isolation</li>
+          <li class="flex items-center gap-2"><span class="text-green-500 font-bold">✓</span> Analytics &amp; reporting</li>
+          <li class="flex items-center gap-2"><span class="text-green-500 font-bold">✓</span> User management</li>
+          <li class="flex items-center gap-2"><span class="text-green-500 font-bold">✓</span> Invitation system</li>
+          <li class="flex items-center gap-2"><span class="text-green-500 font-bold">✓</span> Subscription billing</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Partner Institutions -->
+{% if institutions %}
+<section class="py-16 px-6 bg-white">
+  <div class="max-w-5xl mx-auto text-center">
+    <h2 class="text-3xl font-extrabold text-gray-900 mb-3">Partner Institutions</h2>
+    <p class="text-gray-500 mb-10">Join these universities already using ADVICE.</p>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+      {% for inst in institutions %}
+      <a href="{% url 'institution_detail' inst.slug %}" class="bg-gray-50 rounded-2xl p-4 hover:bg-blue-50 transition border border-gray-100 text-center">
+        <p class="font-semibold text-gray-800 text-sm">{{ inst.name }}</p>
+        <p class="text-xs text-gray-400 mt-1">{{ inst.country }}</p>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<!-- CTA -->
+<section class="bg-blue-700 text-white py-20 px-6 text-center">
+  <h2 class="text-4xl font-extrabold mb-4">Ready to support your students?</h2>
+  <p class="text-blue-100 text-lg mb-8">Start with a free trial. No credit card required.</p>
+  <div class="flex flex-col sm:flex-row gap-4 justify-center">
+    <a href="{% url 'register' %}" class="bg-white text-blue-700 px-8 py-4 rounded-2xl font-bold hover:bg-blue-50 transition">Start Free Trial</a>
+    <a href="{% url 'contact' %}" class="border border-white/40 text-white px-8 py-4 rounded-2xl font-bold hover:bg-white/10 transition">Talk to Sales</a>
+  </div>
+</section>
+
+{% endblock %}

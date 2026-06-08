@@ -1,0 +1,90 @@
+{% extends 'layouts/app.html' %}
+{% block title %}{{ goal.title }} — ADVICE{% endblock %}
+{% block page_title %}Goal Details{% endblock %}
+
+{% block app_content %}
+<div class="max-w-2xl space-y-6">
+  <div class="card">
+    <div class="flex items-start justify-between mb-6">
+      <div>
+        <h2 class="text-xl font-bold text-gray-900">{{ goal.title }}</h2>
+        <p class="text-sm text-gray-500 mt-1">{{ goal.get_category_display }} {% if goal.target_date %}· Target: {{ goal.target_date|date:"d M Y" }}{% endif %}</p>
+      </div>
+      <span class="badge text-sm px-3 py-1.5
+        {% if goal.status == 'active' %}bg-blue-100 text-blue-700
+        {% elif goal.status == 'completed' %}bg-green-100 text-green-700
+        {% elif goal.status == 'on_hold' %}bg-yellow-100 text-yellow-700
+        {% else %}bg-gray-100 text-gray-600{% endif %}">
+        {{ goal.get_status_display }}
+      </span>
+    </div>
+
+    <!-- Progress bar -->
+    <div class="mb-6">
+      <div class="flex justify-between text-sm mb-2 font-medium">
+        <span class="text-gray-700">Progress</span>
+        <span class="{% if goal.progress_percentage >= 75 %}text-green-600{% elif goal.progress_percentage >= 40 %}text-yellow-600{% else %}text-blue-600{% endif %}">{{ goal.progress_percentage }}%</span>
+      </div>
+      <div class="h-3 bg-gray-100 rounded-full overflow-hidden">
+        <div class="h-full rounded-full transition-all
+          {% if goal.progress_percentage >= 75 %}bg-green-500{% elif goal.progress_percentage >= 40 %}bg-yellow-500{% else %}bg-blue-500{% endif %}"
+          style="width: {{ goal.progress_percentage }}%"></div>
+      </div>
+    </div>
+
+    <div class="mb-5">
+      <p class="text-xs text-gray-400 uppercase font-semibold tracking-wider mb-2">Description</p>
+      <p class="text-gray-700 bg-gray-50 p-4 rounded-xl">{{ goal.description }}</p>
+    </div>
+
+    {% if goal.counselor_notes %}
+    <div class="mb-5">
+      <p class="text-xs text-gray-400 uppercase font-semibold tracking-wider mb-2">Counselor Notes</p>
+      <p class="text-gray-700 bg-blue-50 p-4 rounded-xl border border-blue-100">{{ goal.counselor_notes }}</p>
+    </div>
+    {% endif %}
+
+    {% if goal.student_reflection %}
+    <div class="mb-5">
+      <p class="text-xs text-gray-400 uppercase font-semibold tracking-wider mb-2">Your Reflection</p>
+      <p class="text-gray-700 bg-purple-50 p-4 rounded-xl border border-purple-100">{{ goal.student_reflection }}</p>
+    </div>
+    {% endif %}
+  </div>
+
+  <!-- Update progress (student) -->
+  {% if user.is_student and goal.student == user %}
+  <div class="card">
+    <h3 class="font-bold text-gray-900 mb-4">Update Your Progress</h3>
+    <form method="post" class="space-y-4">
+      {% csrf_token %}
+      <input type="hidden" name="action" value="update_progress">
+      <div>
+        <label class="block text-sm font-semibold text-gray-700 mb-2">Progress: <span id="prog_val" class="text-blue-600">{{ goal.progress_percentage }}%</span></label>
+        <input type="range" name="progress_percentage" min="0" max="100" value="{{ goal.progress_percentage }}" class="w-full accent-blue-600" oninput="document.getElementById('prog_val').textContent=this.value+'%'">
+      </div>
+      <div>
+        <label class="block text-sm font-semibold text-gray-700 mb-2">Reflection / Update</label>
+        <textarea name="student_reflection" rows="3" class="form-input" placeholder="Share how you're progressing...">{{ goal.student_reflection }}</textarea>
+      </div>
+      <button type="submit" class="btn-primary">Save Progress</button>
+    </form>
+  </div>
+  {% endif %}
+
+  <!-- Counselor notes -->
+  {% if user.is_counselor %}
+  <div class="card">
+    <h3 class="font-bold text-gray-900 mb-4">Add Counselor Notes</h3>
+    <form method="post" class="space-y-4">
+      {% csrf_token %}
+      <input type="hidden" name="action" value="counselor_notes">
+      <textarea name="counselor_notes" rows="4" class="form-input" placeholder="Clinical notes for this goal...">{{ goal.counselor_notes }}</textarea>
+      <button type="submit" class="btn-primary">Save Notes</button>
+    </form>
+  </div>
+  {% endif %}
+
+  <a href="{% url 'goals' %}" class="btn-secondary inline-block">← Back to Goals</a>
+</div>
+{% endblock %}

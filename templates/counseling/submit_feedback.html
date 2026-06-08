@@ -1,0 +1,13 @@
+{% extends 'layouts/app.html' %}{% block title %}Session Feedback{% endblock %}{% block page_title %}Leave Feedback{% endblock %}
+{% block app_content %}<div class="max-w-md"><div class="card">
+<p class="text-gray-500 mb-5">Session with {{ session.counselor.full_name }} on {{ session.scheduled_at|date:"d M Y" }}</p>
+<form method="post" class="space-y-5">{% csrf_token %}
+<div><label class="block text-sm font-semibold text-gray-700 mb-2">Overall Rating</label>
+<div class="flex gap-2">{% for i in "12345" %}<label class="cursor-pointer"><input type="radio" name="rating" value="{{ forloop.counter }}" class="sr-only" {% if forloop.counter == 4 %}checked{% endif %}><span class="text-3xl hover:scale-110 transition">⭐</span></label>{% endfor %}</div></div>
+<div><label class="block text-sm font-semibold text-gray-700 mb-2">Was this session helpful?</label>
+<div class="flex gap-3"><label class="flex items-center gap-2"><input type="radio" name="was_helpful" value="yes" checked> Yes</label><label class="flex items-center gap-2"><input type="radio" name="was_helpful" value="no"> No</label></div></div>
+<div><label class="block text-sm font-semibold text-gray-700 mb-1.5">Additional Comments</label><textarea name="comments" rows="3" class="form-input" placeholder="Optional comments..."></textarea></div>
+<div><label class="block text-sm font-semibold text-gray-700 mb-2">Would you recommend this counselor?</label>
+<div class="flex gap-3"><label class="flex items-center gap-2"><input type="radio" name="would_recommend" value="yes" checked> Yes</label><label class="flex items-center gap-2"><input type="radio" name="would_recommend" value="no"> No</label></div></div>
+<button type="submit" class="btn-primary w-full">Submit Feedback</button>
+</form></div></div>{% endblock %}

@@ -1,0 +1,55 @@
+{% extends 'layouts/app.html' %}
+{% block title %}Billing — ADVICE{% endblock %}
+{% block page_title %}Billing & Subscription{% endblock %}
+{% block app_content %}
+<div class="max-w-3xl space-y-6">
+  {% if subscription %}
+  <div class="card border-l-4 {% if subscription.is_active %}border-green-400{% else %}border-red-400{% endif %}">
+    <div class="flex items-start justify-between mb-4">
+      <div>
+        <h2 class="font-bold text-gray-900 text-xl">{{ subscription.plan.name }} Plan</h2>
+        <p class="text-gray-500 text-sm">{{ subscription.plan.billing_cycle|title }} billing</p>
+      </div>
+      <span class="badge text-sm px-3 py-1.5 {% if subscription.is_active %}bg-green-100 text-green-700{% else %}bg-red-100 text-red-700{% endif %}">
+        {{ subscription.get_status_display }}
+      </span>
+    </div>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+      {% if subscription.trial_ends_at %}<div class="bg-yellow-50 rounded-xl p-3"><p class="text-xs text-gray-400">Trial Ends</p><p class="font-semibold">{{ subscription.trial_ends_at|date:"d M Y" }}</p></div>{% endif %}
+      {% if subscription.current_period_end %}<div class="bg-gray-50 rounded-xl p-3"><p class="text-xs text-gray-400">Next Renewal</p><p class="font-semibold">{{ subscription.current_period_end|date:"d M Y" }}</p></div>{% endif %}
+    </div>
+  </div>
+  {% else %}
+  <div class="card text-center py-10">
+    <p class="text-4xl mb-3">💳</p>
+    <p class="text-gray-500 mb-4">No active subscription found.</p>
+    <a href="{% url 'plans' %}" class="btn-primary">View Plans</a>
+  </div>
+  {% endif %}
+
+  {% if payments %}
+  <div class="card">
+    <h2 class="font-bold text-gray-900 mb-4">Payment History</h2>
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm">
+        <thead><tr class="border-b border-gray-100 text-xs text-gray-400 uppercase tracking-wider">
+          <th class="text-left pb-3">Date</th><th class="text-left pb-3">Amount</th><th class="text-left pb-3">Gateway</th><th class="text-left pb-3">Status</th>
+        </tr></thead>
+        <tbody class="divide-y divide-gray-50">
+          {% for p in payments %}
+          <tr class="hover:bg-gray-50">
+            <td class="py-3 text-gray-600">{{ p.created_at|date:"d M Y" }}</td>
+            <td class="py-3 font-semibold">${{ p.amount_usd }}</td>
+            <td class="py-3 text-gray-500 capitalize">{{ p.gateway }}</td>
+            <td class="py-3"><span class="badge {% if p.status == 'succeeded' %}bg-green-100 text-green-700{% elif p.status == 'failed' %}bg-red-100 text-red-600{% else %}bg-yellow-100 text-yellow-700{% endif %}">{{ p.get_status_display }}</span></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  {% endif %}
+
+  <a href="{% url 'plans' %}" class="btn-secondary inline-block">View All Plans</a>
+</div>
+{% endblock %}

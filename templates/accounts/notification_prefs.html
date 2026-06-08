@@ -1,0 +1,4 @@
+{% extends 'layouts/app.html' %}{% block title %}Notification Preferences{% endblock %}{% block page_title %}Notification Preferences{% endblock %}
+{% block app_content %}<div class="max-w-md"><div class="card"><form method="post" class="space-y-4">{% csrf_token %}
+{% for field in form %}<label class="flex items-center gap-3">{{ field }} <span class="text-sm text-gray-700">{{ field.label }}</span></label>{% endfor %}
+<button type="submit" class="btn-primary">Save Preferences</button></form></div></div>{% endblock %}

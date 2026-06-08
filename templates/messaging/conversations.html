@@ -1,0 +1,61 @@
+{% extends 'layouts/app.html' %}
+{% block title %}Messages — ADVICE{% endblock %}
+{% block page_title %}Messages{% endblock %}
+
+{% block app_content %}
+<div class="flex gap-6 h-[calc(100vh-11rem)]">
+
+  <!-- Conversation list -->
+  <div class="w-80 flex-shrink-0 bg-white rounded-2xl border border-gray-100 flex flex-col overflow-hidden">
+    <div class="p-4 border-b border-gray-100 flex items-center justify-between">
+      <h2 class="font-bold text-gray-900">Conversations</h2>
+      <a href="{% url 'start_conversation' %}" class="w-8 h-8 bg-blue-600 rounded-xl flex items-center justify-center text-white hover:bg-blue-700 transition text-lg" title="New message">+</a>
+    </div>
+
+    <div class="flex-1 overflow-y-auto divide-y divide-gray-50">
+      {% for item in conv_data %}
+      <a href="{% url 'conversation_detail' item.conversation.id %}" class="flex items-center gap-3 p-4 hover:bg-gray-50 transition">
+        <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center font-bold text-blue-700 flex-shrink-0 text-sm">
+          {% if item.other_user %}{{ item.other_user.first_name.0 }}{{ item.other_user.last_name.0 }}{% else %}?{% endif %}
+        </div>
+        <div class="flex-1 min-w-0">
+          <div class="flex justify-between items-baseline">
+            <p class="font-semibold text-gray-900 text-sm truncate">
+              {% if item.other_user %}{{ item.other_user.full_name }}{% else %}Group Chat{% endif %}
+            </p>
+            {% if item.last_message %}
+            <span class="text-xs text-gray-400 flex-shrink-0 ml-1">{{ item.last_message.sent_at|date:"H:i" }}</span>
+            {% endif %}
+          </div>
+          {% if item.last_message %}
+          <p class="text-xs text-gray-400 truncate">{{ item.last_message.content|truncatechars:45 }}</p>
+          {% else %}
+          <p class="text-xs text-gray-300 italic">No messages yet</p>
+          {% endif %}
+        </div>
+        {% if item.unread_count > 0 %}
+        <span class="w-5 h-5 bg-blue-600 text-white text-xs rounded-full flex items-center justify-center flex-shrink-0">{{ item.unread_count }}</span>
+        {% endif %}
+      </a>
+      {% empty %}
+      <div class="text-center py-10 px-4 text-gray-400">
+        <p class="text-4xl mb-2">💬</p>
+        <p class="text-sm">No conversations yet</p>
+        <a href="{% url 'start_conversation' %}" class="text-blue-600 text-sm hover:underline mt-2 inline-block">Start one →</a>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Empty state -->
+  <div class="flex-1 bg-white rounded-2xl border border-gray-100 flex items-center justify-center">
+    <div class="text-center text-gray-400">
+      <p class="text-6xl mb-4">💬</p>
+      <p class="text-lg font-semibold text-gray-600">Select a conversation</p>
+      <p class="text-sm mt-1">Choose a conversation to start messaging</p>
+      <a href="{% url 'start_conversation' %}" class="btn-primary mt-4 inline-block">New Message</a>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

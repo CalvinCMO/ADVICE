@@ -1,0 +1,156 @@
+{% extends 'layouts/app.html' %}
+{% block title %}Student Dashboard — ADVICE{% endblock %}
+{% block page_title %}Good day, {{ user.first_name }} 👋{% endblock %}
+{% block page_subtitle %}Here's your wellness overview{% endblock %}
+
+{% block app_content %}
+<div class="space-y-6">
+
+  <!-- Quick stats -->
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+    <div class="card text-center">
+      <p class="text-3xl font-extrabold text-blue-600">{{ upcoming_sessions.count }}</p>
+      <p class="text-sm text-gray-500 mt-1">Upcoming Sessions</p>
+    </div>
+    <div class="card text-center">
+      <p class="text-3xl font-extrabold text-green-600">{{ active_goals }}</p>
+      <p class="text-sm text-gray-500 mt-1">Active Goals</p>
+    </div>
+    <div class="card text-center">
+      {% if recent_wellness %}
+      <p class="text-3xl font-extrabold text-purple-600">{{ recent_wellness.overall_score }}</p>
+      <p class="text-sm text-gray-500 mt-1">Wellness Score</p>
+      {% else %}
+      <p class="text-3xl font-extrabold text-gray-300">—</p>
+      <p class="text-sm text-gray-500 mt-1">No Check-in Yet</p>
+      {% endif %}
+    </div>
+    <div class="card text-center">
+      <p class="text-3xl font-extrabold text-indigo-600">{{ counselors.count }}</p>
+      <p class="text-sm text-gray-500 mt-1">Available Counselors</p>
+    </div>
+  </div>
+
+  <div class="grid md:grid-cols-3 gap-6">
+
+    <!-- Upcoming sessions -->
+    <div class="card col-span-2">
+      <div class="flex items-center justify-between mb-5">
+        <h2 class="font-bold text-gray-900 text-lg">Upcoming Sessions</h2>
+        <a href="{% url 'book_session' %}" class="btn-primary text-sm">+ Book Session</a>
+      </div>
+      {% if upcoming_sessions %}
+      <div class="space-y-3">
+        {% for session in upcoming_sessions %}
+        <div class="flex items-center justify-between p-4 bg-blue-50 rounded-xl border border-blue-100">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-blue-200 rounded-full flex items-center justify-center">
+              <span class="text-blue-700 font-semibold text-sm">{{ session.counselor.first_name.0 }}{{ session.counselor.last_name.0 }}</span>
+            </div>
+            <div>
+              <p class="font-semibold text-gray-900 text-sm">{{ session.counselor.full_name }}</p>
+              <p class="text-xs text-gray-500">{{ session.scheduled_at|date:"D, d M Y \a\t H:i" }} · {{ session.get_mode_display }}</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="badge {% if session.session_type == 'crisis' %}bg-red-100 text-red-700{% else %}bg-blue-100 text-blue-700{% endif %}">{{ session.get_session_type_display }}</span>
+            <a href="{% url 'session_detail' session.id %}" class="text-blue-600 hover:text-blue-800 text-xs font-medium">View →</a>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <div class="text-center py-10">
+        <p class="text-4xl mb-3">📅</p>
+        <p class="text-gray-500 mb-4">No upcoming sessions</p>
+        <a href="{% url 'book_session' %}" class="btn-primary text-sm">Book Your First Session</a>
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- Wellness & quick actions -->
+    <div class="space-y-4">
+      <!-- Today's wellness -->
+      <div class="card">
+        <h2 class="font-bold text-gray-900 mb-4">Daily Check-In</h2>
+        {% if recent_wellness %}
+        <div class="text-center py-2">
+          <div class="text-4xl font-extrabold text-green-600">{{ recent_wellness.overall_score }}</div>
+          <div class="text-sm text-gray-500 mt-1">Score today</div>
+          <div class="grid grid-cols-2 gap-2 mt-4 text-xs">
+            <div class="bg-blue-50 p-2 rounded-lg">
+              <p class="text-gray-400">Mood</p>
+              <p class="font-bold text-blue-700">{{ recent_wellness.mood_score }}/10</p>
+            </div>
+            <div class="bg-purple-50 p-2 rounded-lg">
+              <p class="text-gray-400">Sleep</p>
+              <p class="font-bold text-purple-700">{{ recent_wellness.sleep_quality }}/10</p>
+            </div>
+          </div>
+        </div>
+        {% else %}
+        <div class="text-center py-4">
+          <p class="text-3xl mb-2">💚</p>
+          <p class="text-sm text-gray-500 mb-3">Submit today's check-in</p>
+          <a href="{% url 'wellness_checkin' %}" class="btn-primary text-sm w-full block text-center">Check In Now</a>
+        </div>
+        {% endif %}
+      </div>
+
+      <!-- Quick actions -->
+      <div class="card">
+        <h2 class="font-bold text-gray-900 mb-3">Quick Actions</h2>
+        <div class="space-y-2">
+          <a href="{% url 'book_session' %}" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-gray-50 transition">
+            <span class="text-xl">📅</span><span class="text-sm text-gray-700">Book a session</span>
+          </a>
+          <a href="{% url 'wellness_checkin' %}" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-gray-50 transition">
+            <span class="text-xl">💚</span><span class="text-sm text-gray-700">Wellness check-in</span>
+          </a>
+          <a href="{% url 'conversations' %}" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-gray-50 transition">
+            <span class="text-xl">💬</span><span class="text-sm text-gray-700">Messages</span>
+          </a>
+          <a href="{% url 'goals' %}" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-gray-50 transition">
+            <span class="text-xl">🎯</span><span class="text-sm text-gray-700">View goals</span>
+          </a>
+          <a href="{% url 'group_sessions' %}" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-gray-50 transition">
+            <span class="text-xl">👥</span><span class="text-sm text-gray-700">Group sessions</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Available counselors -->
+  {% if counselors %}
+  <div class="card">
+    <div class="flex items-center justify-between mb-5">
+      <h2 class="font-bold text-gray-900 text-lg">Your Counselors</h2>
+      <a href="{% url 'counselors_list' %}" class="text-sm text-blue-600 hover:underline">View all</a>
+    </div>
+    <div class="grid md:grid-cols-3 gap-4">
+      {% for c in counselors %}
+      <div class="border border-gray-100 rounded-xl p-4 hover:border-blue-200 transition">
+        <div class="flex items-center gap-3 mb-3">
+          <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center font-bold text-blue-700">{{ c.first_name.0 }}{{ c.last_name.0 }}</div>
+          <div>
+            <p class="font-semibold text-gray-900 text-sm">{{ c.full_name }}</p>
+            <p class="text-xs text-gray-400">{% if c.years_experience %}{{ c.years_experience }} yrs exp{% else %}Counselor{% endif %}</p>
+          </div>
+        </div>
+        {% if c.specializations %}
+        <div class="flex flex-wrap gap-1 mb-3">
+          {% for spec in c.specializations|slice:":2" %}
+          <span class="badge bg-blue-50 text-blue-700">{{ spec }}</span>
+          {% endfor %}
+        </div>
+        {% endif %}
+        <a href="{% url 'book_session' %}?counselor={{ c.id }}" class="block text-center text-sm bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition">Book Session</a>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+</div>
+{% endblock %}

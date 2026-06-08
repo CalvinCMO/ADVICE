@@ -1,0 +1,8 @@
+{% extends 'layouts/app.html' %}{% block title %}Cancel Session{% endblock %}{% block page_title %}Cancel Session{% endblock %}
+{% block app_content %}<div class="max-w-md"><div class="card border-l-4 border-red-400">
+<h2 class="font-bold text-xl mb-2">Cancel this session?</h2>
+<p class="text-gray-500 mb-6">Session with {% if user.is_student %}{{ session.counselor.full_name }}{% else %}{{ session.student.full_name }}{% endif %} on {{ session.scheduled_at|date:"d M Y, H:i" }}.</p>
+<form method="post" class="space-y-4">{% csrf_token %}
+<div><label class="block text-sm font-semibold text-gray-700 mb-1.5">Reason for cancellation</label><textarea name="reason" rows="3" class="form-input" placeholder="Please provide a reason..."></textarea></div>
+<div class="flex gap-3"><button type="submit" class="btn-danger">Yes, Cancel Session</button><a href="{% url 'session_detail' session.id %}" class="btn-secondary">Keep Session</a></div>
+</form></div></div>{% endblock %}

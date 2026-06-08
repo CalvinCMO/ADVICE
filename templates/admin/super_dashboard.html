@@ -1,0 +1,13 @@
+{% extends 'layouts/app.html' %}{% block title %}Super Admin{% endblock %}{% block page_title %}Platform Overview{% endblock %}
+{% block app_content %}<div class="space-y-6">
+<div class="grid grid-cols-3 gap-4">
+  <div class="card text-center"><p class="text-3xl font-extrabold text-blue-600">{{ total_institutions }}</p><p class="text-sm text-gray-500">Total Institutions</p></div>
+  <div class="card text-center"><p class="text-3xl font-extrabold text-green-600">{{ active_institutions }}</p><p class="text-sm text-gray-500">Active Institutions</p></div>
+  <div class="card text-center"><p class="text-3xl font-extrabold text-purple-600">{{ total_users }}</p><p class="text-sm text-gray-500">Total Users</p></div>
+</div>
+<div class="card"><h2 class="font-bold text-gray-900 mb-4">Institutions</h2>
+<div class="overflow-x-auto"><table class="w-full text-sm"><thead><tr class="border-b border-gray-100">
+<th class="text-left py-3 text-xs text-gray-400 uppercase">Name</th><th class="text-left py-3 text-xs text-gray-400 uppercase">Plan</th><th class="text-left py-3 text-xs text-gray-400 uppercase">Status</th><th class="text-left py-3 text-xs text-gray-400 uppercase">Created</th>
+</tr></thead><tbody class="divide-y divide-gray-50">
+{% for inst in institutions %}<tr><td class="py-3 font-semibold">{{ inst.name }}</td><td class="py-3"><span class="badge bg-blue-100 text-blue-700">{{ inst.plan }}</span></td><td class="py-3"><span class="badge {% if inst.status == 'active' %}bg-green-100 text-green-700{% else %}bg-red-100 text-red-600{% endif %}">{{ inst.status }}</span></td><td class="py-3 text-gray-400">{{ inst.created_at|date:"d M Y" }}</td></tr>{% endfor %}
+</tbody></table></div></div></div>{% endblock %}

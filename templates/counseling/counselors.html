@@ -1,0 +1,50 @@
+{% extends 'layouts/app.html' %}
+{% block title %}Counselors — ADVICE{% endblock %}
+{% block page_title %}Our Counselors{% endblock %}
+{% block page_subtitle %}Certified mental health professionals at your institution{% endblock %}
+
+{% block app_content %}
+<div class="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+  {% for c in counselors %}
+  <div class="card hover:shadow-md transition">
+    <div class="flex items-center gap-4 mb-4">
+      <div class="w-14 h-14 rounded-full bg-gradient-to-br from-blue-400 to-indigo-500 flex items-center justify-center font-bold text-white text-xl">
+        {{ c.first_name.0 }}{{ c.last_name.0 }}
+      </div>
+      <div>
+        <h3 class="font-bold text-gray-900">{{ c.full_name }}</h3>
+        {% if c.years_experience %}<p class="text-sm text-gray-400">{{ c.years_experience }} years experience</p>{% endif %}
+      </div>
+    </div>
+
+    {% if c.bio %}
+    <p class="text-sm text-gray-500 mb-4 line-clamp-3">{{ c.bio }}</p>
+    {% endif %}
+
+    {% if c.specializations %}
+    <div class="flex flex-wrap gap-1.5 mb-4">
+      {% for spec in c.specializations|slice:":4" %}
+      <span class="badge bg-blue-50 text-blue-700 text-xs">{{ spec }}</span>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if c.license_number %}
+    <p class="text-xs text-gray-400 mb-4">License: {{ c.license_number }}</p>
+    {% endif %}
+
+    {% if user.is_student %}
+    <div class="flex gap-2">
+      <a href="{% url 'book_session' %}?counselor={{ c.id }}" class="flex-1 text-center btn-primary text-sm py-2">📅 Book Session</a>
+      <a href="{% url 'start_conversation' %}?recipient={{ c.id }}" class="flex-1 text-center btn-secondary text-sm py-2">💬 Message</a>
+    </div>
+    {% endif %}
+  </div>
+  {% empty %}
+  <div class="col-span-3 card text-center py-14">
+    <p class="text-5xl mb-4">👨‍⚕️</p>
+    <p class="text-gray-500">No counselors available yet.</p>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}
